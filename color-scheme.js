@@ -33,6 +33,7 @@ const colorNameToHue = {
 };
 
 function hslToHex(h, s, l) {
+  h = ((h % 360) + 360) % 360;
   s /= 100;
   l /= 100;
 
@@ -65,32 +66,34 @@ function generateScheme(baseHue) {
   ];
 }
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
-
-rl.question('Enter a color name: ', (input) => {
-  const colorName = input.trim().toLowerCase();
-  const baseHue = colorNameToHue[colorName];
-
-  if (baseHue === undefined) {
-    console.log(`Unknown color: "${colorName}"`);
-    console.log('Supported colors:', Object.keys(colorNameToHue).join(', '));
-    rl.close();
-    return;
-  }
-
-  console.log(`\nBase color: ${colorName} (hue: ${baseHue}°)`);
-  console.log('Suggested color scheme:\n');
-
-  const scheme = generateScheme(baseHue);
-  scheme.forEach(color => {
-    console.log(`  ${color.name}: hue=${color.hue}°  hex=${color.hex}`);
+if (require.main === module) {
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
   });
 
-  rl.close();
-});
+  rl.question('Enter a color name: ', (input) => {
+    const colorName = input.trim().toLowerCase();
+    const baseHue = colorNameToHue[colorName];
+
+    if (baseHue === undefined) {
+      console.log(`Unknown color: "${colorName}"`);
+      console.log('Supported colors:', Object.keys(colorNameToHue).join(', '));
+      rl.close();
+      return;
+    }
+
+    console.log(`\nBase color: ${colorName} (hue: ${baseHue}°)`);
+    console.log('Suggested color scheme:\n');
+
+    const scheme = generateScheme(baseHue);
+    scheme.forEach(color => {
+      console.log(`  ${color.name}: hue=${color.hue}°  hex=${color.hex}`);
+    });
+
+    rl.close();
+  });
+}
 
 // Export functions for testing
 module.exports = {

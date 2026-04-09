@@ -2,9 +2,6 @@
 
 const assert = require('assert');
 
-// Load the module
-const colorModule = require('./color-scheme.js');
-
 // Test utilities
 let testsRun = 0;
 let testsPassed = 0;
@@ -104,11 +101,9 @@ test('wraps hue 359° correctly', () => {
   assert.strictEqual(result, 359, `Expected 359 but got ${result}`);
 });
 
-test('wraps hue 360° to 0° (or 360° depending on implementation)', () => {
+test('wraps hue 360° to 0°', () => {
   const result = wrapHue(360);
-  // Note: The implementation has a bug - it uses % 361 instead of % 360
-  // This test documents the current (buggy) behavior
-  assert(result === 0 || result === 360, `Expected 0 or 360 but got ${result}`);
+  assert.strictEqual(result, 0, `Expected 0 but got ${result}`);
 });
 
 test('wraps negative hue -30° correctly', () => {
